@@ -21,7 +21,7 @@ module HW2.T1
   , mapTree
   )where
 
-data Option a = None | Some a deriving Show
+data Option a = None | Some a
 data Pair a = P a a deriving Show
 data Quad a = Q a a a a deriving Show
 data Annotated e a = a :# e deriving Show
