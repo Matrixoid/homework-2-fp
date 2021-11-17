@@ -53,3 +53,42 @@ instance Num Expr where
 instance Fractional Expr where
   x / y = Op (Div x y)
   fromRational x = Val (fromRational x)
+
+eval :: Expr -> State [Prim Double] Double
+eval (Val x) = pure x
+eval (Op expr) = if isBinExpr expr then binOp expr else unarOp expr
+  where
+    isBinExpr :: Prim a -> Bool
+    isBinExpr (Abs x) = False
+    isBinExpr (Sgn x) = False
+    isBinExpr _ = True
+    binOp :: Prim Expr -> State [Prim Double] Double
+    binOp (Add x y) = do
+      leftValue <- eval x
+      rightValue <- eval y
+      modifyState (Add leftValue rightValue :)
+      return (leftValue + rightValue)
+    binOp (Sub x y) = do
+          leftValue <- eval x
+          rightValue <- eval y
+          modifyState (Sub leftValue rightValue :)
+          return (leftValue - rightValue)
+    binOp (Mul x y) = do
+          leftValue <- eval x
+          rightValue <- eval y
+          modifyState (Mul leftValue rightValue :)
+          return (leftValue * rightValue)
+    binOp (Div x y) = do
+          leftValue <- eval x
+          rightValue <- eval y
+          modifyState (Div leftValue rightValue :)
+          return (leftValue / rightValue)
+    unarOp :: Prim Expr -> State [Prim Double] Double
+    unarOp (Abs x) = do
+              valueX <- eval x
+              modifyState (Abs valueX :)
+              return (abs valueX)
+    unarOp (Sgn x) = do
+                  valueX <- eval x
+                  modifyState (Sgn valueX :)
+                  return (signum valueX)
