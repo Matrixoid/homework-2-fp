@@ -53,25 +53,3 @@ instance Num Expr where
 instance Fractional Expr where
   x / y = Op (Div x y)
   fromRational x = Val (fromRational x)
-  
-binaryOperation :: (Double -> Double -> Double) -> Expr -> Expr -> (Double -> Double -> Prim Double) -> State [Prim Double] Double
-binaryOperation op l r toPrim = do
-  evalL <- eval l
-  evalR <- eval r
-  modifyState (toPrim evalL evalR :)
-  return $ op evalL evalR
-
-unaryOperation :: (Double -> Double) -> Expr -> (Double -> Prim Double) -> State [Prim Double] Double
-unaryOperation op x toPrim = do
-  evalX <- eval x
-  modifyState (toPrim evalX :)
-  return $ op evalX
-
-eval :: Expr -> State [Prim Double] Double
-eval (Val a)        = pure a
-eval (Op (Add x y)) = binaryOperation (+) x y Add
-eval (Op (Sub x y)) = binaryOperation (-) x y Sub
-eval (Op (Mul x y)) = binaryOperation (*) x y Mul
-eval (Op (Div x y)) = binaryOperation (/) x y Div
-eval (Op (Abs x))   = unaryOperation abs x Abs
-eval (Op (Sgn x))   = unaryOperation signum x Sgn
