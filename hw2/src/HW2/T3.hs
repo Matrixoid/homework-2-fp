@@ -1,6 +1,12 @@
-module HW2.T3 where
+module HW2.T3 
+  ( joinOption
+  , joinExcept
+  , joinAnnotated
+  , joinList
+  , joinFun
+  ) where
 
-{-import HW2.T1 ( Option(..)
+import HW2.T1 ( Option(..)
               , Pair(..)
               , Quad(..)
               , Annotated(..)
@@ -8,9 +14,7 @@ module HW2.T3 where
               , Prioritised(..)
               , Stream(..)
               , List(..)
-              , Fun(..))-}
-import HW2.T1
-import HW2.T2
+              , Fun(..))
 import Data.Semigroup hiding (Option)
 
 joinOption :: Option (Option a) -> Option a
