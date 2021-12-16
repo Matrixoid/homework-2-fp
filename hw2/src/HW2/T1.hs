@@ -73,6 +73,6 @@ mapFun function1 (F function2) = F (function1 . function2)
 
 mapTree :: (a -> b) -> (Tree a -> Tree b)
 mapTree _ Leaf = Leaf
-mapTree function (Branch left element right) = Branch (mapTree function left) 
-                                                      (function element)
-                                                      (mapTree function right)
+mapTree function (Branch left element r) = Branch (mapTree function left) 
+                                                  (function element)
+                                                  (mapTree function r)
